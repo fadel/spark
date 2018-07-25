@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
-#include <sstream>
 #include <vector>
 
 const char *TICKS[] = {"▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"};
@@ -10,7 +9,7 @@ const size_t NUM_TICKS = 8;
 const double EPSILON = 1e-8;
 
 template<typename T>
-void sparkify(const std::vector<T> &values, std::ostringstream &out) {
+void sparkify(const std::vector<T> &values, std::ostream &out) {
     auto minmax = std::minmax_element(values.begin(), values.end());
     auto min = *minmax.first,
          max = *minmax.second;
@@ -30,7 +29,6 @@ void sparkify(const std::vector<T> &values, std::ostringstream &out) {
 int main()
 {
     std::vector<double> values;
-    std::ostringstream out;
     for (double value; std::cin >> value;) {
         values.push_back(value);
     }
@@ -42,7 +40,7 @@ int main()
         return 0;
     }
 
-    sparkify(values, out);
-    std::cout << out.str() << std::endl;
+    sparkify(values, std::cout);
+    std::cout << std::endl;
     return 0;
 }
