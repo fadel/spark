@@ -8,30 +8,28 @@ const char *TICKS[] = {"▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"};
 const size_t NUM_TICKS = 8;
 const double EPSILON = 1e-8;
 
-template<typename T>
-void sparkify(const std::vector<T> &values, std::ostream &out) {
-    auto minmax = std::minmax_element(values.begin(), values.end());
+template<typename InputIterator, typename OutputIterator>
+void sparkify(InputIterator first, InputIterator last, OutputIterator &out) {
+    auto minmax = std::minmax_element(first, last);
     auto min = *minmax.first,
          max = *minmax.second;
     auto values_range = max - min;
 
     if (abs(values_range) < EPSILON) {
-        auto it = std::ostream_iterator<const char *>(out);
-        std::fill_n(it, values.size(), TICKS[0]);
+        std::fill_n(out, last - first, TICKS[0]);
     } else {
         auto coef = (NUM_TICKS - 1) / values_range;
-        for (const T &x: values) {
-            out << TICKS[(size_t) round((x - min) * coef)];
-        }
+        std::transform(first, last, out, [&](auto x) {
+            return TICKS[(size_t) round((x - min) * coef)];
+        });
     }
 }
 
 int main()
 {
-    std::vector<double> values;
-    for (double value; std::cin >> value;) {
-        values.push_back(value);
-    }
+    std::istream_iterator<double> cin_it(std::cin), eos;
+    std::vector<double> values(cin_it, eos);
+
     if (!std::cin.eof() && std::cin.fail()) {
         std::cerr << "Parse error" << std::endl;
         return 1;
@@ -40,7 +38,8 @@ int main()
         return 0;
     }
 
-    sparkify(values, std::cout);
+    std::ostream_iterator<const char *> cout_it(std::cout);
+    sparkify(values.begin(), values.end(), cout_it);
     std::cout << std::endl;
     return 0;
 }
