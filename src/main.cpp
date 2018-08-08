@@ -15,7 +15,7 @@ void sparkify(InputIterator first, InputIterator last, OutputIterator &out) {
          max = *minmax.second;
     auto values_range = max - min;
 
-    if (abs(values_range) < EPSILON) {
+    if (values_range < EPSILON) {
         std::fill_n(out, last - first, TICKS[0]);
     } else {
         auto coef = (NUM_TICKS - 1) / values_range;
