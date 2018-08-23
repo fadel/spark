@@ -1,11 +1,11 @@
 #include <cmath>
 #include <algorithm>
+#include <array>
 #include <iostream>
 #include <iterator>
 #include <vector>
 
-const char *TICKS[] = {"▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"};
-const size_t NUM_TICKS = 8;
+const std::array<const char *, 8> TICKS = {"▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"};
 const double EPSILON = 1e-8;
 
 template<typename InputIterator, typename OutputIterator>
@@ -18,7 +18,7 @@ void sparkify(InputIterator first, InputIterator last, OutputIterator &out) {
     if (values_range < EPSILON) {
         std::fill_n(out, last - first, TICKS[0]);
     } else {
-        auto coef = (NUM_TICKS - 1) / values_range;
+        auto coef = (TICKS.size() - 1) / values_range;
         std::transform(first, last, out, [&](auto x) {
             return TICKS[(size_t) round((x - min) * coef)];
         });
